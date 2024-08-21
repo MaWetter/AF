@@ -96,3 +96,27 @@ test('Bad data', async ({ page }) => {
   
   });
 
+  test('Create a quote', async ({ page }) => {
+
+    await page.goto('https://daedalus.janniskaranikis.dev/challenges/5-create-a-quote');
+
+    var quote = page.locator('q.text-lg.italic.mb-8.select-none');
+    var stringOfWords = await quote.innerText();
+
+    var words = stringOfWords.split(' ');
+    var count = words.length;
+    
+    for(let i = 0; i < count; i++) {
+       var wordToGet = words[i];
+       var word = page.getByRole('listitem').getByText(wordToGet,{ exact: true});
+       await word.hover(); 
+       await page.mouse.down();
+       await page.getByRole('list').nth(1).hover();
+       await page.mouse.up();
+    }
+    
+    await expect(page.locator('div.text-green-600.text-lg')).toContainText('That is correct! : ASSERTME ');
+    await expect(page.getByText('ASSERTME')).toBeVisible();
+
+});
+

@@ -23,9 +23,9 @@ test('Log in', async ({ page }) => {
     await expect(page.locator('div.text-green-600.text-lg')).toContainText('Good Job! Your well earned assert code: ASSERTME' );
     await expect(page.getByText('ASSERTME')).toBeVisible();
   
-  });
+});
 
-  test('Mr.Robot', async ({ page }) => {
+test('Mr.Robot', async ({ page }) => {
 
     await page.goto('https://daedalus.janniskaranikis.dev/challenges/3-mr-robot');
 
@@ -52,8 +52,47 @@ test('Log in', async ({ page }) => {
     var sodaChoice = await page.locator('span#correctddValue.font-bold').innerText();
     var element = page.locator('select.border-4.border-red-400.mt-2.py-4.mb-6.px-6.rounded-xl');
     await element.selectOption(sodaChoice);
-    
+
     await expect(page.locator('div.text-green-600.text-lg')).toContainText('Mr. Robot is happy! : ASSERTME' );
     await expect(page.getByText('ASSERTME')).toBeVisible();
   
+});
+
+test('Bad data', async ({ page }) => {
+
+    await page.route('https://daedalus.janniskaranikis.dev/api/users' , route => route.fulfill({
+        json: [
+            {
+              "name": "Richard",
+              "age": 31
+            },
+            {
+              "name": "Dinesh",
+              "age": 33
+            },
+            {
+              "name": "Gilfoyle",
+              "age": 35
+            },
+            {
+              "name": "Bighead",
+              "age": 29
+            },
+            {
+              "name": "Jared",
+              "age": 31
+            },
+            {
+                "name": "Malin", 
+                "age": 42 
+            },  
+          ]
+    }));
+
+    await page.goto('https://daedalus.janniskaranikis.dev/challenges/4-bad-data');
+
+    await expect(page.locator('div.text-green-600.text-lg')).toContainText('Good job! Your assert code: ASSERTME' );
+    await expect(page.getByText('ASSERTME')).toBeVisible();
+  
   });
+
